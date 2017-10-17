@@ -11,12 +11,11 @@
 import {hashcode,getElementTd} from './utils.js';
 import Context from './context.js';
 class Person {
-  constructor(name,surname,points) {
+  constructor(name,surname,points,tasks) {
     this.name = name;
     this.surname = surname;
-    this.points = points;
-    //this.context = context;    
-    this.gradedTasks = [];    
+    this.points = points;   
+    this.gradedTasks = tasks;    
   }    
   
   /** Add points to persons we should carefully use it. */
@@ -25,6 +24,8 @@ class Person {
   }
   /** Add a gradded task linked to person with its own mark. */
   addGradedTask(taskInstance) {
+    
+    console.log("entre"+taskInstance);
         this.gradedTasks.push({"task":taskInstance,"points":0});
         Context.getRanking();
   }

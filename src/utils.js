@@ -21,6 +21,20 @@ function getElementTd(text) {
   tdEl.appendChild(t);
    return tdEl;
 }
+function makeRequest(filename,callback,that){
+  var xhttp = new XMLHttpRequest();
+  xhttp.open("GET", filename, true);
+  xhttp.send();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      document.getElementById("content").innerHTML =
+      this.responseText;
+      callback(that);
+    }
+    
+  };
+  
+}
 
-export {hashcode,getElementTd};
+export {hashcode,getElementTd,makeRequest};
 
