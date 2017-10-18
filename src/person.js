@@ -9,7 +9,7 @@
  */
 
 import {hashcode,getElementTd} from './utils.js';
-import Context from './context.js';
+import {context} from './context.js';
 class Person {
   constructor(name,surname,points,tasks) {
     this.name = name;
@@ -27,7 +27,7 @@ class Person {
     
     console.log("entre"+taskInstance);
         this.gradedTasks.push({"task":taskInstance,"points":0});
-        Context.getRanking();
+        context.getRanking();
   }
   /** Renders HTML person view Create a table row (tr) with all name, points , add button and one input for every gradded task binded for that person. */
   getHTMLView() {
@@ -45,7 +45,7 @@ class Person {
 
     addPointsEl.addEventListener("click", () => {
           this.addPoints(20);
-          setTimeout(function(){Context.getRanking()}.bind(this),1000);
+          setTimeout(function(){context.getRanking();}.bind(this),1000);
     });
 
     let that = this;
@@ -53,12 +53,12 @@ class Person {
     this.gradedTasks.forEach(function(gTaskItem) {      
         let inputEl = document.createElement("input");    
         inputEl.type = "number";inputEl.min=0;inputEl.max = 100;  
-        inputEl.value = gTaskItem["points"]
+        inputEl.value = gTaskItem.points;
         inputEl.addEventListener("change", function(event) {
-        that.addPoints(parseInt(gTaskItem["points"])*(-1));
-        gTaskItem["points"] = inputEl.value;
-        that.addPoints(parseInt(gTaskItem["points"]));
-        Context.getRanking();        
+        that.addPoints(parseInt(gTaskItem.points)*(-1));
+        gTaskItem.points = inputEl.value;
+        that.addPoints(parseInt(gTaskItem.points));
+        context.getRanking();        
       });
       liEl.appendChild(getElementTd(inputEl));
     });

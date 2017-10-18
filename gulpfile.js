@@ -2,7 +2,8 @@ var fs = require("fs");
 var browserify = require("browserify");
 var gulp = require('gulp');
 var webserver = require('gulp-webserver');
-var jslint = require('gulp-jslint-simple');
+var jshint = require('gulp-jshint');
+var map = require('map-stream');
 const jscs = require('gulp-jscs');
 
 if (!fs.existsSync("dist")){
@@ -26,28 +27,32 @@ gulp.task('webserver', function() {
     open: true
   }));
 });
-
-gulp.task('lint', function () {
-  gulp.src('./src/*.js')
-      .pipe(jslint.run({
-          // project-wide JSLint options
-          node: true,
-          vars: true
-      }))
-      .pipe(jslint.report({
-          // example of using a JSHint reporter
-          reporter: require('jshint-stylish').reporter
-      }));
+var exitOnJshintError = map(function (file, cb) {
+  if (!file.jshint.success) {
+    console.error('jshint failed');
+    process.exit(1);
+  }
+});
+var errors= process.on('exit', function() {
+  if (gulp.fail) {
+    // return non-zero exit code
+    process.exit(1);
+  }
+});
+gulp.task('hint', function() {
+  return gulp.src('./src/*.js')
+    .pipe(jshint())
+    .pipe(jshint.reporter('default', { verbose: true }))
+    .pipe(exitOnJshintError);
 });
 
-gulp.task('jscs', () => {
-  return gulp.src('./src/*.js')
+    gulp.task('jscs', () => {
+      return gulp.src('./src/*.js')
       .pipe(jscs())
       .pipe(jscs.reporter());
-});
-
+  });
 // watch any change
 gulp.task('watch', ['browserify'], function () {
     gulp.watch('./src/**/*.js', ['browserify']);
 });
-gulp.task('default', ['browserify', 'webserver', 'watch']);
+gulp.task('default', ['browserify','jscs', 'webserver', 'watch']);

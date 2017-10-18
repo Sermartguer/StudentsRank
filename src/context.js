@@ -2,17 +2,14 @@
  * Context class. Devised to control every element involved in the app: students, gradedTasks ...
  *
  * @constructor
- * @tutorial pointing-criteria
  */
 import Person from './person.js';
 import GradedTask from './gradedtask.js';
 import {hashcode,getElementTd,makeRequest} from './utils.js';
 
 class Context {
-
-  constructor() {
-    
-    if (typeof(Storage) !== "undefined") {
+    constructor() {
+        if (typeof(Storage) !== undefined) {
         this.students = []; 
         this.gradedTasks = [];
       var arrayStudents = JSON.parse(localStorage.getItem("students"));
@@ -50,7 +47,6 @@ class Context {
   addStudent(){ 
       var addStudents = document.getElementById("addStudents");
       addStudents.addEventListener("click", () => {
-        debugger;
         makeRequest('addformStudent.html',this.addStudents,this);
       });
   }
@@ -93,12 +89,12 @@ class Context {
         addbutton.addEventListener('click', function(){
             let name = document.getElementById('firstname');
             let surname = document.getElementById('lastname');
-            let addperson = new Person(name.value, surname.value,0);
+            let addperson = new Person(name.value, surname.value,0,[]);
             
             console.log(that.gradedTasks.length);
             if(that.gradedTasks.length>0){
                 that.gradedTasks.forEach(function(tasks){
-                    addperson.gradedTasks=[{"task":tasks,"points":0}];
+                    addperson.gradedTasks.push({"task":tasks,"points":0});
                 });
             }else{
                 addperson.gradedTasks=[];
@@ -122,4 +118,4 @@ class Context {
     }
 }
 
-export default Context = new Context();
+export let context = new Context();
