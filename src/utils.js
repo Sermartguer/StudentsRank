@@ -21,7 +21,7 @@ function getElementTd(text) {
     tdEl.appendChild(t);
     return tdEl;
 }
-function makeRequest(filename, callback, that) {
+function makeRequest(filename, callback) {
     var xhttp = new XMLHttpRequest();
     xhttp.open('GET', filename, true);
     xhttp.send();
@@ -29,7 +29,7 @@ function makeRequest(filename, callback, that) {
         if (this.readyState == 4 && this.status == 200) {
             document.getElementById('content').innerHTML =
             this.responseText;
-            callback(that);
+            callback();
         }
     };
 }
