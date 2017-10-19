@@ -4,7 +4,7 @@
 
     "requireSemicolons": true,
     "requireParenthesesAroundIIFE": true,
-    "maximumLineLength": 120,
+    "maximumLineLength": 300,
     "validateLineBreaks": "LF",
     "validateIndentation": 4,
     "disallowTrailingComma": true,
@@ -14,7 +14,7 @@
     "disallowImplicitTypeConversion": ["string"],
 
     "safeContextKeyword": "_this",
-
+    "disallowMultipleVarDecl": false,
     "jsDoc": {
         "checkAnnotations": "closurecompiler",
         "checkParamNames": true,

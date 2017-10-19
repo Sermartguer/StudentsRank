@@ -55,4 +55,4 @@ gulp.task('hint', function() {
 gulp.task('watch', ['browserify'], function () {
     gulp.watch('./src/**/*.js', ['browserify']);
 });
-gulp.task('default', ['browserify','jscs', 'webserver', 'watch']);
+gulp.task('default', ['browserify','hint','jscs','webserver', 'watch']);
