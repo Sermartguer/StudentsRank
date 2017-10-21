@@ -8,7 +8,8 @@ import {hashcode,getElementTd,localSave} from './utils.js';
 import {context} from './context.js';
 import Singleton from './singleton.js';
 class Person {
-    constructor(name, surname, points, tasks) {
+    constructor(id,name, surname, points, tasks) {
+        this.id = id;
         this.name = name;
         this.surname = surname;
         this.points = points;
@@ -32,12 +33,14 @@ class Person {
         var addPointsEl = document.createElement('button');
         var tb = document.createTextNode('+XP');
         addPointsEl.setAttribute('class', 'btn morexp');
+        addPointsEl.setAttribute('name', 'btn');
+        addPointsEl.setAttribute('id', this.id);
         addPointsEl.appendChild(tb);
         liEl.appendChild(getElementTd(addPointsEl,'col3'));
-        addPointsEl.addEventListener('click', () => {
+        /*addPointsEl.addEventListener('click', () => {
             this.addPoints(20);
             setTimeout(function() {Singleton.getInstance().getRanking();}.bind(this), 1000);
-        });
+        });*/
         let _this = this;
         this.calculatedPoints = 0;
         this.gradedTasks.forEach(function(gTaskItem) {
