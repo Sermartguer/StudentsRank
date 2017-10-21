@@ -20,6 +20,7 @@
     "gulp-babel": "^7.0.0",
     "gulp-browserify": "^0.5.1",
     "gulp-jscs": "^4.0.0",
+    "gulp-jsdoc3": "^1.0.1",
     "gulp-jshint": "^2.0.4",
     "gulp-webserver": "^0.9.1",
     "jshint": "^2.9.5"

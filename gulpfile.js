@@ -5,6 +5,8 @@ var webserver = require('gulp-webserver');
 var jshint = require('gulp-jshint');
 var map = require('map-stream');
 const jscs = require('gulp-jscs');
+var jsdoc = require('gulp-jsdoc3');
+
 
 if (!fs.existsSync("dist")){
   fs.mkdirSync("dist");
@@ -51,8 +53,12 @@ gulp.task('hint', function() {
       .pipe(jscs())
       .pipe(jscs.reporter());
   });
+  gulp.task('doc', function (cb) {
+    gulp.src(['README.md', './src/*.js'], {read: false})
+        .pipe(jsdoc(cb));
+});
 // watch any change
 gulp.task('watch', ['browserify'], function () {
     gulp.watch('./src/**/*.js', ['browserify']);
 });
-gulp.task('default', ['browserify','hint','jscs','webserver', 'watch']);
+gulp.task('default', ['browserify','hint','jscs','doc','webserver', 'watch']);

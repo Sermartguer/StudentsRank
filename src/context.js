@@ -6,8 +6,8 @@
  */
 import Person from './person.js';
 import GradedTask from './gradedtask.js';
-import {hashcode,getElementTd,makeRequest} from './utils.js';
-
+import {hashcode,getElementTd,makeRequest,localSave} from './utils.js';
+import Singleton from './singleton.js';
 class Context {
     constructor() {
         this.students = [];
@@ -39,7 +39,7 @@ class Context {
     adTask() {
         var addTask = document.getElementById('addGradedTask');
         addTask.addEventListener('click', () => {
-            makeRequest('addTask.html', this.addGradedTask);
+            makeRequest('../templates/addTask.html', this.addGradedTask);
             //this.addGradedTask();
         });
         //this.gradedTasks = [];
@@ -47,7 +47,7 @@ class Context {
     addStudent() {
         var addStudents = document.getElementById('addStudents');
         addStudents.addEventListener('click', () => {
-            makeRequest('addformStudent.html', this.addStudents);
+            makeRequest('../templates/addformStudent.html', this.addStudents);
         });
     }
     /** Draw Students rank table in descendent order using points as a criteria */
@@ -55,34 +55,40 @@ class Context {
         this.students.sort(function(a, b) {
             return (b.points - a.points);
         });
-        makeRequest('rankingView.html', this.addtoHTML);
+        makeRequest('../templates/rankingView.html', this.addtoHTML);
     }
     addtoHTML() {
         var studentsEl = document.getElementById('llistat');
         let TASK = '<tr><td colspan="3"></td>';
-        context.gradedTasks.forEach(function(taskItem) {
+        Singleton.getInstance().gradedTasks.forEach(function(taskItem) {
             TASK += '<td>' + taskItem.name + '</td>';
         });
         studentsEl.innerHTML = TASK;
-        context.students.forEach(function(studentItem) {
+        Singleton.getInstance().students.forEach(function(studentItem) {
             var liEl = studentItem.getHTMLView();
             studentsEl.appendChild(liEl);
         });
     }
     /** Create a form to create a GradedTask that will be added to every student */
     addGradedTask() {
+        
         let addtask = document.getElementById('submit');
         addtask.addEventListener('click', function() {
-            console.log(context);
+            debugger;
             var taskname = document.getElementById('taskname').value;
             let gtask = new GradedTask(taskname);
-            context.gradedTasks.push(gtask);
-            context.students.forEach(function(studentItem) {
+            Singleton.getInstance().gradedTasks.push(gtask);
+            console.log(Singleton.getInstance().students);
+            Singleton.getInstance().students.forEach(function(studentItem) {
+                debugger;
+                console.log(Singleton.getInstance());
                 studentItem.addGradedTask(gtask);
             }.bind(this));
-            localStorage.setItem('students', JSON.stringify(context.students));
-            localStorage.setItem('tasks', JSON.stringify(context.gradedTasks));
-            context.getRanking();
+            //localStorage.setItem('students', JSON.stringify(Singleton.getInstance().students));
+            localSave('students',Singleton.getInstance().students)
+            //localStorage.setItem('tasks', JSON.stringify(Singleton.getInstance().gradedTasks));
+            localSave('tasks',Singleton.getInstance().gradedTasks)
+            Singleton.getInstance().getRanking();
         });
     }
     addStudents() {
@@ -91,19 +97,20 @@ class Context {
             let name = document.getElementById('firstname');
             let surname = document.getElementById('lastname');
             let addperson = new Person(name.value, surname.value,0,[]);
-            if (context.gradedTasks.length > 0) {
-                context.gradedTasks.forEach(function(tasks) {
+            if (Singleton.getInstance().gradedTasks.length > 0) {
+                Singleton.getInstance().gradedTasks.forEach(function(tasks) {
                     addperson.addGradedTask(tasks);
                 });
             }else {
                 addperson.gradedTasks = [];
             }
             addperson.calculatedPoints = 0;
-            context.students.push(addperson);
-            localStorage.setItem('students', JSON.stringify(context.students));
-            console.log(context.students);
+            Singleton.getInstance().students.push(addperson);
+            localSave('students', Singleton.getInstance().students);
+            //localStorage.setItem('students', JSON.stringify(Singleton.getInstance().students));
+            console.log(Singleton.getInstance().students);
         }.bind(this));
     }
 }
 
-export let context = new Context();
+export default Context;

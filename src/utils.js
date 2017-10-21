@@ -12,11 +12,14 @@ function hashcode(str) {
     return hash;
 }
 /** Pass a text or an element ang get a td table element wrapping it. */
-function getElementTd(text) {
+function getElementTd(text,idcss) {
     let tdEl = document.createElement('td');
     let t = text;
     if (typeof text === 'string' || typeof text === 'number') {
         t = document.createTextNode(text); // Create a text node
+    }
+    if (idcss != undefined){
+        tdEl.setAttribute('class', idcss);
     }
     tdEl.appendChild(t);
     return tdEl;
@@ -33,5 +36,8 @@ function makeRequest(filename, callback) {
         }
     };
 }
+function localSave(key,value) {
+    localStorage.setItem(key, JSON.stringify(value));
+}
 
-export {hashcode,getElementTd,makeRequest};
+export {hashcode,getElementTd,makeRequest,localSave};
