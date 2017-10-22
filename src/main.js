@@ -7,4 +7,5 @@ window.onload = function() {
     Singleton.getInstance().adTask();
     Singleton.getInstance().addStudent();
     Singleton.getInstance().getRanking();
+    Singleton.getInstance().addAttitudeTask();
 };

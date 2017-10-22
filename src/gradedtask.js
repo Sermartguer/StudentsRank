@@ -3,12 +3,23 @@
  * @constructor
  */
 class Tasks {
-    constructor(name) {
+    constructor(name, description) {
         this.name = name;
+        this.description = description;
     }
 }
-class GradedTasks extends Tasks{
-    constructor
+class GradedTask extends Tasks{
+    constructor(name, description){
+        super(name, description);
+        //this.description = description;
+    }
+}
+class AttitudeTasks extends Tasks{
+    constructor(name,category,description){
+        super(name,description);
+        this.category = category;
+        //this.description = description;
+    }
 }
 
-export default GradedTask;
+export {GradedTask,AttitudeTasks};

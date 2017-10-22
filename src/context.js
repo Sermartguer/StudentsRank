@@ -5,7 +5,7 @@
  * @param
  */
 import Person from './person.js';
-import GradedTask from './gradedtask.js';
+import {GradedTask,AttitudeTasks} from './gradedtask.js';
 import {hashcode,getElementTd,makeRequest,localSave} from './utils.js';
 import Singleton from './singleton.js';
 class Context {
@@ -20,11 +20,11 @@ class Context {
             
             arrayStudents.forEach(function(student) {
                 var id = hashcode(student.name+student.surname);
-                this.students.push(new Person(id,student.name,student.surname,student.points,student.gradedTasks));
+                this.students.push(new Person(id,student.name,student.surname,student.points,student.gradedTasks,student.attitudeTasks));
             }.bind(this));
             if (taskscheck !== null) {
                 arrayTasks.forEach(function(task) {
-                    this.gradedTasks.push(new GradedTask(task.name));
+                    this.gradedTasks.push(new GradedTask(task.name,task.description));
                 }.bind(this));
             }
         }
@@ -54,12 +54,16 @@ class Context {
     }
     addAttitudeTask() {
         var btns = document.getElementsByName('btn');
-        for (let i = 0; i < btns.length; i++){
+        var i = -1;
+        btns.forEach(function() {
+            i++;
             btns[i].addEventListener('click', function(event) {
-                makeRequest('../templates/attitudeTasks.html', this.addATasks);
+                console.log(this);
+                makeRequest('../templates/attitudeTasks.html', this.addATasks, event.target.id);
                 console.log(event.target.id);
             }.bind(this));
-        }
+        }.bind(this));
+        
     }
     /** Draw Students rank table in descendent order using points as a criteria */
     getRanking() {
@@ -87,17 +91,19 @@ class Context {
         
         let addtask = document.getElementById('submit');
         addtask.addEventListener('click', function() {
+            //debugger;
             var taskname = document.getElementById('taskname').value;
-            let gtask = new GradedTask(taskname);
+            var taskdesciption = document.getElementById('taskdesciption').value;
+            
+            console.log(taskdesciption);
+            let gtask = new GradedTask(taskname,taskdesciption);
             Singleton.getInstance().gradedTasks.push(gtask);
             console.log(Singleton.getInstance().students);
             Singleton.getInstance().students.forEach(function(studentItem) {
                 console.log(Singleton.getInstance());
                 studentItem.addGradedTask(gtask);
             }.bind(this));
-            //localStorage.setItem('students', JSON.stringify(Singleton.getInstance().students));
             localSave('students',Singleton.getInstance().students);
-            //localStorage.setItem('tasks', JSON.stringify(Singleton.getInstance().gradedTasks));
             localSave('tasks',Singleton.getInstance().gradedTasks);
             Singleton.getInstance().getRanking();
         });
@@ -115,6 +121,7 @@ class Context {
                 });
             }else {
                 addperson.gradedTasks = [];
+                addperson.attitudeTasks = [];
             }
             addperson.calculatedPoints = 0;
             Singleton.getInstance().students.push(addperson);
@@ -123,8 +130,50 @@ class Context {
             console.log(Singleton.getInstance().students);
         }.bind(this));
     }
-    addATasks() {
-        console.log('hola');
+    addATasks(id) {
+        console.log(id);
+        Singleton.getInstance().students.forEach(function(student) {
+           /*var qwe = [
+                new AttitudeTasks('Participacio','Participacio2','ParticipacioParticipacio')
+            ];
+            localSave('attitudeTasks',qwe);*/
+            var select = document.getElementById('mySelect');
+            if (student.id == id){
+                var arrayAttitude = JSON.parse(localStorage.getItem('attitudeTasks'));
+                
+                arrayAttitude.forEach(function(attitude){
+                    var option = document.createElement('option');
+                    var optext = document.createTextNode(attitude.description);
+                    option.appendChild(optext);
+                    option.setAttribute('value',attitude.category);
+                    select.appendChild(option);
+                });               
+                var butatt = document.getElementById('submit');
+                butatt.addEventListener('click', function() {
+                    
+                    var pointsAtt = document.getElementById('pointsatt').value;
+                    let e = parseInt(pointsAtt);
+                    var pointglobal = e+student.points;
+                    console.log(Singleton.getInstance().students);
+                    let pop = Singleton.getInstance().students;
+                    var johnRemoved = pop.filter(function(el) {
+                        console.log(el.id,id);
+                        return el.id != id;
+                    });
+                    console.log(johnRemoved);
+                    localSave('students', johnRemoved);
+                    Singleton.getInstance().students = johnRemoved;
+                    console.log(Singleton.getInstance().students);
+                    //console.log(johnRemoved);
+                   
+                    student.addAttitudeTask(select.value,e);
+                    student.points = pointglobal;
+                    Singleton.getInstance().students.push(student);
+                    localSave('students', Singleton.getInstance().students);
+                    return '';
+                }); 
+            }
+        });
     }
 }
 

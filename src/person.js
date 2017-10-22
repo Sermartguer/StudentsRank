@@ -8,12 +8,13 @@ import {hashcode,getElementTd,localSave} from './utils.js';
 import {context} from './context.js';
 import Singleton from './singleton.js';
 class Person {
-    constructor(id,name, surname, points, tasks) {
+    constructor(id,name, surname, points, tasks, attitude) {
         this.id = id;
         this.name = name;
         this.surname = surname;
         this.points = points;
         this.gradedTasks = tasks;
+        this.attitudeTasks = attitude;
     }
     /** Add points to persons we should carefully use it. */
     addPoints(points) {
@@ -22,7 +23,11 @@ class Person {
     /** Add a gradded task linked to person with its own mark. */
     addGradedTask(taskInstance) {
         this.gradedTasks.push({'task': taskInstance, 'points': 0});
+        Singleton.getInstance().getRanking();
         
+    }
+    addAttitudeTask(task, points) {
+        this.attitudeTasks.push({'name': task, 'points':points});
         Singleton.getInstance().getRanking();
     }
     /** Renders HTML person view Create a table row (tr) with all name, points , add button and one input for every gradded task binded for that person. */
