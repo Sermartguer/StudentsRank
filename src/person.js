@@ -8,7 +8,7 @@ import {hashcode,getElementTd,localSave} from './utils.js';
 import {context} from './context.js';
 import Singleton from './singleton.js';
 class Person {
-    constructor(id,name, surname, points, tasks, attitude) {
+    constructor(id, name, surname, points, tasks, attitude) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -24,28 +24,27 @@ class Person {
     addGradedTask(taskInstance) {
         this.gradedTasks.push({'task': taskInstance, 'points': 0});
         Singleton.getInstance().getRanking();
-        
     }
-    addAttitudeTask(task, points) {
-        this.attitudeTasks.push({'name': task, 'points':points});
+    addAttitudeTask(task, description, points) {
+        let date = new Date();
+        let year = date.getFullYear();
+        let month = date.getMonth();
+        let day = date.getDay();
+        this.attitudeTasks.push({'date': year + '-' + month + '-' + day, 'name': task, 'description': description, 'points': points});
         Singleton.getInstance().getRanking();
     }
     /** Renders HTML person view Create a table row (tr) with all name, points , add button and one input for every gradded task binded for that person. */
     getHTMLView() {
         var liEl = document.createElement('tr');
-        liEl.appendChild(getElementTd(this.surname + ', ' + this.name,'col3'));
-        liEl.appendChild(getElementTd(this.points,'col3'));
+        liEl.appendChild(getElementTd(this.surname + ', ' + this.name, 'col3'));
+        liEl.appendChild(getElementTd(this.points, 'col3'));
         var addPointsEl = document.createElement('button');
         var tb = document.createTextNode('+XP');
         addPointsEl.setAttribute('class', 'btn morexp');
         addPointsEl.setAttribute('name', 'btn');
         addPointsEl.setAttribute('id', this.id);
         addPointsEl.appendChild(tb);
-        liEl.appendChild(getElementTd(addPointsEl,'col3'));
-        /*addPointsEl.addEventListener('click', () => {
-            this.addPoints(20);
-            setTimeout(function() {Singleton.getInstance().getRanking();}.bind(this), 1000);
-        });*/
+        liEl.appendChild(getElementTd(addPointsEl, 'col3'));
         let _this = this;
         this.calculatedPoints = 0;
         this.gradedTasks.forEach(function(gTaskItem) {
@@ -60,10 +59,9 @@ class Person {
                 Singleton.getInstance().getRanking();
             });
             liEl.appendChild(getElementTd(inputEl));
-            localSave('tasks',Singleton.getInstance().gradedTasks);
-            localSave('students',Singleton.getInstance().students);
+            localSave('tasks', Singleton.getInstance().gradedTasks);
+            localSave('students', Singleton.getInstance().students);
         });
-        
         return liEl;
     }
 }

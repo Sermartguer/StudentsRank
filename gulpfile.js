@@ -60,5 +60,7 @@ gulp.task('hint', function() {
 // watch any change
 gulp.task('watch', ['browserify'], function () {
     gulp.watch('./src/**/*.js', ['browserify']);
+    gulp.watch('./src/*.js', ['hint']);
+    gulp.watch('./src/*.js', ['jscs']);
 });
-gulp.task('default', ['browserify','hint','jscs','doc','webserver', 'watch']);
+gulp.task('default', ['browserify','doc','webserver', 'watch','hint','jscs']);

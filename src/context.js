@@ -2,12 +2,13 @@
  * Context class. Devised to control every element involved in the app: students, gradedTasks ...
  *
  * @constructor
- * @param
+ *@param
  */
 import Person from './person.js';
 import {GradedTask,AttitudeTasks} from './gradedtask.js';
 import {hashcode,getElementTd,makeRequest,localSave} from './utils.js';
 import Singleton from './singleton.js';
+import attitudeTasks from './attitudeTasks.js';
 class Context {
     constructor() {
         this.students = [];
@@ -15,11 +16,11 @@ class Context {
         let studentscheck = localStorage.getItem('students');
         let taskscheck = localStorage.getItem('tasks');
         if (studentscheck !== null) {
+            attitudeTasks();
             var arrayStudents = JSON.parse(localStorage.getItem('students'));
             var arrayTasks = JSON.parse(localStorage.getItem('tasks'));
-            
             arrayStudents.forEach(function(student) {
-                var id = hashcode(student.name+student.surname);
+                var id = hashcode(student.name + student.surname);
                 this.students.push(new Person(id,student.name,student.surname,student.points,student.gradedTasks,student.attitudeTasks));
             }.bind(this));
             if (taskscheck !== null) {
@@ -28,15 +29,6 @@ class Context {
                 }.bind(this));
             }
         }
-        /*this.students = [
-            new Person('Paco', 'Vañó', 5,[]),
-            new Person('Lucia', 'Botella', 10,[]),
-            new Person('German', 'Ojeda', 3,[]),
-            new Person('Salva', 'Peris', 1,[]),
-            new Person('Oscar', 'Carrion', 40,[])
-        ];
-        localStorage.setItem('students', JSON.stringify(this.students));
-        this.gradedTasks = [];*/
     }
     adTask() {
         var addTask = document.getElementById('addGradedTask');
@@ -63,7 +55,6 @@ class Context {
                 console.log(event.target.id);
             }.bind(this));
         }.bind(this));
-        
     }
     /** Draw Students rank table in descendent order using points as a criteria */
     getRanking() {
@@ -74,9 +65,9 @@ class Context {
     }
     addtoHTML() {
         var studentsEl = document.getElementById('llistat');
-        let TASK = '<tr><td colspan="3"></td>';
+        let TASK = '<tr><th colspan="2">Student</th><th>Points</th>';
         Singleton.getInstance().gradedTasks.forEach(function(taskItem) {
-            TASK += '<td>' + taskItem.name + '</td>';
+            TASK += '<th>' + taskItem.name + '</th>';
         });
         studentsEl.innerHTML = TASK;
         Singleton.getInstance().students.forEach(function(studentItem) {
@@ -84,17 +75,14 @@ class Context {
             studentsEl.appendChild(liEl);
         });
         Singleton.getInstance().addAttitudeTask();
-        
     }
     /** Create a form to create a GradedTask that will be added to every student */
     addGradedTask() {
-        
         let addtask = document.getElementById('submit');
         addtask.addEventListener('click', function() {
             //debugger;
             var taskname = document.getElementById('taskname').value;
             var taskdesciption = document.getElementById('taskdesciption').value;
-            
             console.log(taskdesciption);
             let gtask = new GradedTask(taskname,taskdesciption);
             Singleton.getInstance().gradedTasks.push(gtask);
@@ -103,8 +91,8 @@ class Context {
                 console.log(Singleton.getInstance());
                 studentItem.addGradedTask(gtask);
             }.bind(this));
-            localSave('students',Singleton.getInstance().students);
-            localSave('tasks',Singleton.getInstance().gradedTasks);
+            localSave('students', Singleton.getInstance().students);
+            localSave('tasks', Singleton.getInstance().gradedTasks);
             Singleton.getInstance().getRanking();
         });
     }
@@ -113,8 +101,9 @@ class Context {
         addbutton.addEventListener('click', function() {
             let name = document.getElementById('firstname');
             let surname = document.getElementById('lastname');
-            var id = hashcode(name.value+surname.value);
-            let addperson = new Person(id,name.value, surname.value,0,[]);
+            let points = document.getElementById('studentPoints').value;
+            var id = hashcode(name.value + surname.value);
+            let addperson = new Person(id,name.value, surname.value,points,[]);
             if (Singleton.getInstance().gradedTasks.length > 0) {
                 Singleton.getInstance().gradedTasks.forEach(function(tasks) {
                     addperson.addGradedTask(tasks);
@@ -133,45 +122,41 @@ class Context {
     addATasks(id) {
         console.log(id);
         Singleton.getInstance().students.forEach(function(student) {
-           /*var qwe = [
-                new AttitudeTasks('Participacio','Participacio2','ParticipacioParticipacio')
-            ];
-            localSave('attitudeTasks',qwe);*/
             var select = document.getElementById('mySelect');
-            if (student.id == id){
+            if (student.id == id) {
                 var arrayAttitude = JSON.parse(localStorage.getItem('attitudeTasks'));
-                
-                arrayAttitude.forEach(function(attitude){
+                arrayAttitude.forEach(function(attitude) {
                     var option = document.createElement('option');
-                    var optext = document.createTextNode(attitude.description);
+                    var optext = document.createTextNode(attitude.name);
                     option.appendChild(optext);
-                    option.setAttribute('value',attitude.category);
+                    console.log(attitude.name);
+                    option.setAttribute('value', attitude.name);
                     select.appendChild(option);
-                });               
+                });
+                if (student.attitudeTasks !== undefined) {
+                    var historyEl = document.getElementById('attlist');
+
+                    let HISTORY = '<tr><th  class="text-left">Date</th><th  class="text-left">Task Category</th><th  class="text-left">Task Description</th><th  class="text-left">Points</th></tr><tr>';
+                    student.attitudeTasks.forEach(function(attask) {
+                        console.log(student.attitudeTasks);
+                        HISTORY += '<td>' + attask.date + '</td><td>' + attask.name + '</td><td>' + attask.description + '</td><td>' + attask.points + '</td></tr>';
+                        historyEl.innerHTML = HISTORY;
+                    });
+                }
                 var butatt = document.getElementById('submit');
                 butatt.addEventListener('click', function() {
-                    
+                    let descval = document.getElementById('attdescription').value;
+                    console.log(Singleton.getInstance().students);
                     var pointsAtt = document.getElementById('pointsatt').value;
                     let e = parseInt(pointsAtt);
-                    var pointglobal = e+student.points;
-                    console.log(Singleton.getInstance().students);
-                    let pop = Singleton.getInstance().students;
-                    var johnRemoved = pop.filter(function(el) {
-                        console.log(el.id,id);
-                        return el.id != id;
-                    });
-                    console.log(johnRemoved);
-                    localSave('students', johnRemoved);
-                    Singleton.getInstance().students = johnRemoved;
-                    console.log(Singleton.getInstance().students);
-                    //console.log(johnRemoved);
-                   
-                    student.addAttitudeTask(select.value,e);
+                    let f = parseInt(student.points);
+                    var pointglobal = e + f;
+                    student.addAttitudeTask(select.value, descval, e);
                     student.points = pointglobal;
-                    Singleton.getInstance().students.push(student);
+                    console.log(Singleton.getInstance().students);
                     localSave('students', Singleton.getInstance().students);
                     return '';
-                }); 
+                });
             }
         });
     }

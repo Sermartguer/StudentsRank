@@ -9,15 +9,15 @@ class Tasks {
     }
 }
 class GradedTask extends Tasks{
-    constructor(name, description){
+    constructor(name, description) {
         super(name, description);
         //this.description = description;
     }
 }
 class AttitudeTasks extends Tasks{
-    constructor(name,category,description){
-        super(name,description);
-        this.category = category;
+    constructor(name, description) {
+        super(name, description);
+        //this.category = category;
         //this.description = description;
     }
 }

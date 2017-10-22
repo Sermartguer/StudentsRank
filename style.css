@@ -1,5 +1,9 @@
 /* Styles go here */
+:root {
+    --skycolor:rgb(90, 162, 255)
+}
 @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
+
 * {
     margin:0;
     padding: 0;
@@ -12,7 +16,7 @@ body{
     text-align: center;
     margin-top: 2.5%;
 }
-#llistat{
+#llistat, #attlist{
     margin: 0 auto;
     text-align: center;
     margin-top: 2.5%;
@@ -25,6 +29,7 @@ body{
 }
 input.ranking{
     width: 100%;
+
     
 }
 
@@ -56,8 +61,74 @@ input.ranking{
     width: 40%;
 }
 .morexp{
-    background: rgb(90, 162, 255);
+    background: var(--skycolor);
     border: none;
     color: white;
     font-size: 20px;
 }
+header {
+    margin-bottom:20px;
+}
+.fields{
+    margin-bottom: 5px;
+}
+
+
+table{
+    background: white;
+    border-radius:3px;
+    border-collapse: collapse;
+   
+    margin: auto;
+    max-width: 600px;
+    padding:5px;
+    padding-right: 10px;
+    width: 100%;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    animation: float 5s infinite; 
+}
+#llistat{
+    
+}
+#attlist{
+    height: 250px;
+}
+th{
+    padding:0px;
+
+    background: #1b1e24;
+    color: white;
+    padding: 4px;
+    height: 75px;
+}
+ tr {
+    border-top: 1px solid #C1C3D1;
+    border-bottom: 1px solid #C1C3D1;
+    color:#666B85;
+    font-size:16px;
+    font-weight:normal;
+    text-shadow: 0 1px 1px rgba(256, 256, 256, 0.1);
+    height: 75px;
+
+  }
+   td {
+    padding-right: 5px;
+   }
+
+  tr:first-child {
+    border-top:none;
+  }
+   tr:last-child {
+    border-bottom:none;
+  }
+   
+   tr:nth-child(odd) td {
+    background:#EBEBEB;
+  }
+  tr:last-child td:first-child {
+    border-bottom-left-radius:3px;
+  }
+   
+ tr:last-child td:last-child {
+    border-bottom-right-radius:3px;
+  }

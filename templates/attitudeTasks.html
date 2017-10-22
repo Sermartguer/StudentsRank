@@ -1,10 +1,22 @@
+<br>
 <form>
     <span id="atttask">Attitude Tasks:</span>
-    <select id="mySelect">
-
-    </select>
+    <select id="mySelect"></select>
     <br>
-    <input type="number" id="pointsatt" name="pointsatt">
     <br>
-    <input type="submit" value="Submit" id="submit">
+    <input type="text" id="attdescription" name="attdescription">
+    <br>
+    <br>
+    <input type="number" id="pointsatt" name="pointsatt">    
+    <br>
+    <br>
+    <input type="submit" value="Submit" id="submit" class="btn morexp">
+    <br>
+    <br>
+    <h3>History of tasks</h3>
+    <div id="hatask">
+        <table id="attlist">
+            <tr><td>${HISTORY}</td></tr>
+        </table>
+    </div>
 </form>

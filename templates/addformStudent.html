@@ -1,9 +1,15 @@
-<form>
-    First name:<br>
-    <input type="text" name="firstname" id="firstname" value="Sergio">
-    <br>
-    Last name:<br>
-    <input type="text" name="lastname" id="lastname" value="Martinez">
-    <br><br>
-    <input type="submit" value="Submit" id="submit">
+<form class="addStudent">
+    <div class="fields">
+      <label style="display:block">First name: </label>
+      <input type="text" name="firstname" id="firstname" value="Sergio">
+    </div>
+    <div class="fields">
+      <label style="display:block"> Last name: </label>
+      <input type="text" name="lastname" id="lastname" value="Martinez">
+    </div>
+    <div class="fields">
+      <label style="display:block">Default points: </label>
+      <input type="number" name="studentPoints" id="studentPoints">
+    </div>
+    <input type="submit" value="Submit" id="submit" class="btn morexp">
   </form> 
