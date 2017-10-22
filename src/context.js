@@ -50,8 +50,8 @@ class Context {
         btns.forEach(function() {
             i++;
             btns[i].addEventListener('click', function(event) {
-                console.log(this);
-                makeRequest('../templates/attitudeTasks.html', this.addATasks, event.target.id);
+                localSave('click',event.target.id);
+                makeRequest('../templates/attitudeTasks.html', this.addATasks);
                 console.log(event.target.id);
             }.bind(this));
         }.bind(this));
@@ -65,7 +65,7 @@ class Context {
     }
     addtoHTML() {
         var studentsEl = document.getElementById('llistat');
-        let TASK = '<tr><th colspan="2">Student</th><th>Points</th>';
+        let TASK = '<tr><th>Student</th><th colspan="2">Points</th>';
         Singleton.getInstance().gradedTasks.forEach(function(taskItem) {
             TASK += '<th>' + taskItem.name + '</th>';
         });
@@ -102,8 +102,9 @@ class Context {
             let name = document.getElementById('firstname');
             let surname = document.getElementById('lastname');
             let points = document.getElementById('studentPoints').value;
+            let parpoints = parseInt(points);
             var id = hashcode(name.value + surname.value);
-            let addperson = new Person(id,name.value, surname.value,points,[]);
+            let addperson = new Person(id,name.value, surname.value,parpoints,[]);
             if (Singleton.getInstance().gradedTasks.length > 0) {
                 Singleton.getInstance().gradedTasks.forEach(function(tasks) {
                     addperson.addGradedTask(tasks);
@@ -119,8 +120,10 @@ class Context {
             console.log(Singleton.getInstance().students);
         }.bind(this));
     }
-    addATasks(id) {
-        console.log(id);
+    addATasks() {
+        console.log();
+        let id = JSON.parse(localStorage.getItem('click'));
+        localStorage.removeItem('click');
         Singleton.getInstance().students.forEach(function(student) {
             var select = document.getElementById('mySelect');
             if (student.id == id) {
@@ -139,7 +142,7 @@ class Context {
                     let HISTORY = '<tr><th  class="text-left">Date</th><th  class="text-left">Task Category</th><th  class="text-left">Task Description</th><th  class="text-left">Points</th></tr><tr>';
                     student.attitudeTasks.forEach(function(attask) {
                         console.log(student.attitudeTasks);
-                        HISTORY += '<td>' + attask.date + '</td><td>' + attask.name + '</td><td>' + attask.description + '</td><td>' + attask.points + '</td></tr>';
+                        HISTORY += '<td>' + attask.date + '</td><td>' + attask.name + '</td><td>' + attask.description + '</td><td>'+'+' + attask.points + '</td></tr>';
                         historyEl.innerHTML = HISTORY;
                     });
                 }

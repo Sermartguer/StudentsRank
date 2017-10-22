@@ -27,10 +27,7 @@ class Person {
     }
     addAttitudeTask(task, description, points) {
         let date = new Date();
-        let year = date.getFullYear();
-        let month = date.getMonth();
-        let day = date.getDay();
-        this.attitudeTasks.push({'date': year + '-' + month + '-' + day, 'name': task, 'description': description, 'points': points});
+        this.attitudeTasks.push({'date': date, 'name': task, 'description': description, 'points': points});
         Singleton.getInstance().getRanking();
     }
     /** Renders HTML person view Create a table row (tr) with all name, points , add button and one input for every gradded task binded for that person. */
@@ -53,10 +50,15 @@ class Person {
             inputEl.type = 'number';inputEl.min = 0;inputEl.max = 100;
             inputEl.value = gTaskItem.points;
             inputEl.addEventListener('change', function() {
+                console.log(inputEl.value);
+                if(inputEl.value !== ''){
                 _this.addPoints(parseInt(gTaskItem.points) * (-1));
                 gTaskItem.points = inputEl.value;
                 _this.addPoints(parseInt(gTaskItem.points));
                 Singleton.getInstance().getRanking();
+                }else{
+                    inputEl.value = 0;
+                }
             });
             liEl.appendChild(getElementTd(inputEl));
             localSave('tasks', Singleton.getInstance().gradedTasks);
