@@ -51,12 +51,12 @@ class Person {
             inputEl.value = gTaskItem.points;
             inputEl.addEventListener('change', function() {
                 console.log(inputEl.value);
-                if(inputEl.value !== ''){
-                _this.addPoints(parseInt(gTaskItem.points) * (-1));
-                gTaskItem.points = inputEl.value;
-                _this.addPoints(parseInt(gTaskItem.points));
-                Singleton.getInstance().getRanking();
-                }else{
+                if (inputEl.value !== '') {
+                    _this.addPoints(parseInt(gTaskItem.points) * (-1));
+                    gTaskItem.points = inputEl.value;
+                    _this.addPoints(parseInt(gTaskItem.points));
+                    Singleton.getInstance().getRanking();
+                }else {
                     inputEl.value = 0;
                 }
             });

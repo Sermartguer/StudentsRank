@@ -50,7 +50,7 @@ class Context {
         btns.forEach(function() {
             i++;
             btns[i].addEventListener('click', function(event) {
-                localSave('click',event.target.id);
+                localSave('click', event.target.id);
                 makeRequest('../templates/attitudeTasks.html', this.addATasks);
                 console.log(event.target.id);
             }.bind(this));
@@ -65,6 +65,8 @@ class Context {
     }
     addtoHTML() {
         var studentsEl = document.getElementById('llistat');
+        console.log(Singleton.getInstance().students.length);
+        if (Singleton.getInstance().students.length !== 0){
         let TASK = '<tr><th>Student</th><th colspan="2">Points</th>';
         Singleton.getInstance().gradedTasks.forEach(function(taskItem) {
             TASK += '<th>' + taskItem.name + '</th>';
@@ -75,6 +77,10 @@ class Context {
             studentsEl.appendChild(liEl);
         });
         Singleton.getInstance().addAttitudeTask();
+    }else {
+        let TASK = '<tr><th colspan="3">No users found</th>';
+        studentsEl.innerHTML = TASK;
+    }
     }
     /** Create a form to create a GradedTask that will be added to every student */
     addGradedTask() {
@@ -142,7 +148,7 @@ class Context {
                     let HISTORY = '<tr><th  class="text-left">Date</th><th  class="text-left">Task Category</th><th  class="text-left">Task Description</th><th  class="text-left">Points</th></tr><tr>';
                     student.attitudeTasks.forEach(function(attask) {
                         console.log(student.attitudeTasks);
-                        HISTORY += '<td>' + attask.date + '</td><td>' + attask.name + '</td><td>' + attask.description + '</td><td>'+'+' + attask.points + '</td></tr>';
+                        HISTORY += '<td>' + attask.date + '</td><td>' + attask.name + '</td><td>' + attask.description + '</td><td>' + '+' + attask.points + '</td></tr>';
                         historyEl.innerHTML = HISTORY;
                     });
                 }
